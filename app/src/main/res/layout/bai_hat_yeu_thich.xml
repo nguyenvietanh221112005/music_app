@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:padding="8dp">
+
+    <!-- Ảnh bìa bài hát -->
+    <ImageView
+        android:id="@+id/imgBiaNhac"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/bai_hat_yeu_thich"
+        app:srcCompat="@drawable/music_placeholder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Tên bài hát -->
+    <TextView
+        android:id="@+id/tvTenBaiHat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Đi Để Trở Về"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/imgBiaNhac"
+        app:layout_constraintTop_toTopOf="@id/imgBiaNhac"
+        app:layout_constraintEnd_toStartOf="@id/imgTimYeuThich"
+        app:layout_constraintHorizontal_bias="0" />
+
+    <!-- Tên ca sĩ -->
+    <TextView
+        android:id="@+id/tvTenCaSi"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Soobin Hoàng Sơn"
+        android:textColor="#757575"
+        android:textSize="14sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/imgBiaNhac"
+        app:layout_constraintTop_toBottomOf="@id/tvTenBaiHat"
+        app:layout_constraintBottom_toBottomOf="@id/imgBiaNhac"
+        app:layout_constraintEnd_toStartOf="@id/imgTimYeuThich" />
+
+    <!-- Icon tim đỏ -->
+    <ImageView
+        android:id="@+id/imgTimYeuThich"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:padding="4dp"
+        android:contentDescription="@string/yeu_thich"
+        app:srcCompat="@drawable/yeu_thich"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/imgBiaNhac"
+        app:layout_constraintBottom_toBottomOf="@id/imgBiaNhac" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

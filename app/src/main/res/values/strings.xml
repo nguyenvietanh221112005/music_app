@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">musicApp</string>
+    <string name="kham_pha_nghe_si">Kham Pha Nghe Si</string>
+    <string name="dang_nhap">DANG NHAP</string>
+    <string name="ch_a_c_t_i_kho_n_ng_k_ngay">Chưa có tài khoản? Đăng ký ngay</string>
+    <string name="email">Email</string>
+    <string name="ng_nh_p">Đăng Nhập</string>
+    <string name="thu_vien_cua_toi">Thu Vien Cua Toi</string>
+    <string name="bai_hat_yeu_thich" />
+    <string name="yeu_thich" />
+</resources>
