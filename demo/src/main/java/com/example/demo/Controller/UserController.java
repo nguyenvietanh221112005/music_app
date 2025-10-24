@@ -25,14 +25,24 @@ public class UserController {
   }
 
   @PostMapping("/login")
-  public String login(@RequestBody User user) {
+  public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
+    Map<String, Object> response = new HashMap<>();
+
     User existingUser = userService.findByEmail(user.getEmail())
         .orElseThrow(() -> new RuntimeException("Tài khoản không tồn tại"));
 
     if (!existingUser.getPassword().equals(user.getPassword())) {
-      return "Sai mật khẩu!";
+      response.put("success", false);
+      response.put("message", "Sai mật khẩu!");
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
-    return "Đăng nhập thành công! Xin chào, " + existingUser.getTen();
+    response.put("success", true);
+    response.put("message", "Đăng nhập thành công!");
+    response.put("user_id", existingUser.getId());
+    response.put("ten", existingUser.getTen());
+    response.put("email", existingUser.getEmail());
+
+    return ResponseEntity.ok(response);
   }
 }
