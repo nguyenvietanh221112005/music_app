@@ -26,22 +26,17 @@ public class FavoriteController {
   }
 
 
-  @PostMapping("/add")
-  public ResponseEntity<?> addFavorite(@RequestBody Map<String, Long> data) {
-    Long userId = data.get("userId");
-    Long songId = data.get("songId");
+  @PostMapping("/add/{userId}/{songId}")
+  public ResponseEntity<?> addFavorite(@PathVariable Long userId, @PathVariable Long songId) {
     Favorite added = favoriteService.addFavorite(userId, songId);
     if (added == null) {
       return ResponseEntity.badRequest().body("Bài hát đã được yêu thích!");
     }
     return ResponseEntity.ok(added);
   }
-
-
-  @DeleteMapping("/delete")
-  public ResponseEntity<String> deleteFavorite(@RequestBody Map<String, Long> data) {
-    Long userId = data.get("userId");
-    Long songId = data.get("songId");
+  
+  @DeleteMapping("/delete/{userId}/{songId}")
+  public ResponseEntity<String> deleteFavorite(@PathVariable Long userId, @PathVariable Long songId) {
     favoriteService.deleteFavorite(userId, songId);
     return ResponseEntity.ok("Đã xóa khỏi danh sách yêu thích");
   }
