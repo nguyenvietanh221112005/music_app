@@ -7,6 +7,7 @@ public class Constants {
     // Key SharedPreferences
     public static final String PREF_NAME = "music_app_prefs";
     public static final String KEY_IS_LOGGED_IN = "is_logged_in";
+
     public static final String KEY_USER_ID = "user_id";
     public static final String KEY_USER_NAME = "user_name";
     public static final String KEY_USER_EMAIL = "user_email";

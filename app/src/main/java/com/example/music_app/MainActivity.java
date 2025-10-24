@@ -1,29 +1,61 @@
 package com.example.music_app;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.EditText;
-import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import com.example.music_app.R;
 import com.example.music_app.fragment.HomeFragment;
+import com.example.music_app.fragment.LibraryFragment;
+import com.example.music_app.fragment.AccountFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView tvHello;
-    EditText etSearch;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tvHello = findViewById(R.id.tvHello);
-        etSearch = findViewById(R.id.etSearch);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new HomeFragment())
+                    .commit();
+        }
 
-        tvHello.setText("Xin chào, Anh 👋");
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragmentHome, new HomeFragment())
-                .commit();
+        // Hiển thị HomeFragment khi mở app
+        if (savedInstanceState == null) {
+            loadFragment(new HomeFragment());
+        }
+
+        // Xử lý sự kiện click bottom navigation
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            Fragment fragment = null;
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_home) {
+                fragment = new HomeFragment();
+            } else if (itemId == R.id.nav_library) {
+                fragment = new LibraryFragment();
+            } else if (itemId == R.id.nav_account) {
+                fragment = new AccountFragment();
+            }
+
+            return loadFragment(fragment);
+        });
+    }
+
+    private boolean loadFragment(Fragment fragment) {
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
+            return true;
+        }
+        return false;
     }
 }

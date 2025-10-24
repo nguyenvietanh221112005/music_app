@@ -1,17 +1,19 @@
 package com.example.music_app.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.music_app.R;
+import com.example.music_app.activity.MusicPlayerActivity;
+import com.example.music_app.activity.SearchActivity;
 import com.example.music_app.adapter.CategoryAdapter;
 import com.example.music_app.adapter.TopSongAdapter;
 import com.example.music_app.model.BaiHat;
@@ -28,6 +30,7 @@ public class HomeFragment extends Fragment {
     RecyclerView recyclerCategory, recyclerTopSongs;
     CategoryAdapter categoryAdapter;
     TopSongAdapter topSongAdapter;
+    EditText etSearch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,15 +38,35 @@ public class HomeFragment extends Fragment {
 
         recyclerCategory = view.findViewById(R.id.recyclerCategory);
         recyclerTopSongs = view.findViewById(R.id.recyclerTopSongs);
+        etSearch = view.findViewById(R.id.etSearch);
 
-        // Khởi tạo layout manager trước
         recyclerCategory.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerTopSongs.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        setupSearch();
         loadTheLoai();
         loadTopBXH();
 
         return view;
+    }
+
+    private void setupSearch() {
+        if (etSearch == null) return;
+
+        etSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), SearchActivity.class);
+            startActivity(intent);
+        });
+
+        etSearch.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                startActivity(intent);
+                etSearch.clearFocus();
+            }
+        });
+
+        etSearch.setShowSoftInputOnFocus(false);
     }
 
     private void loadTheLoai() {
@@ -72,7 +95,6 @@ public class HomeFragment extends Fragment {
             public void onFailure(Call<ArrayList<TheLoai>> call, Throwable t) {
                 Log.e("HomeFragment", "Category API failure: " + t.getMessage());
                 Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                t.printStackTrace();
             }
         });
     }
@@ -91,20 +113,49 @@ public class HomeFragment extends Fragment {
                         return;
                     }
 
-                    topSongAdapter = new TopSongAdapter(getContext(), list);
+                    // Kiểm tra context trước khi khởi tạo adapter
+                    if (getContext() == null) {
+                        Log.e("HomeFragment", "Context is null, cannot create adapter");
+                        return;
+                    }
+
+                    // Sử dụng requireContext() để đảm bảo context không null
+                    topSongAdapter = new TopSongAdapter(requireContext(), list);
+
+                    // Xử lý sự kiện click bài hát
+                    topSongAdapter.setOnSongClickListener(baiHat -> openMusicPlayer(baiHat));
+
                     recyclerTopSongs.setAdapter(topSongAdapter);
                 } else {
                     Log.e("HomeFragment", "Songs API error: " + response.code());
-                    Toast.makeText(getContext(), "Lỗi tải bài hát: " + response.code(), Toast.LENGTH_SHORT).show();
+                    if (getContext() != null) {
+                        Toast.makeText(getContext(), "Lỗi tải bài hát: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<BaiHat>> call, Throwable t) {
                 Log.e("HomeFragment", "Songs API failure: " + t.getMessage());
-                Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                t.printStackTrace();
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+
+    private void openMusicPlayer(BaiHat baiHat) {
+        Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
+        intent.putExtra("SONG_ID", baiHat.getId());
+        intent.putExtra("SONG_NAME", baiHat.getTenBaiHat());
+        intent.putExtra("ARTIST", baiHat.getCaSi());
+        intent.putExtra("SONG_URL", baiHat.getLink());
+        intent.putExtra("SONG_IMAGE", baiHat.getHinhAnh());
+        intent.putExtra("SONG_OBJECT", baiHat);
+        startActivity(intent);
+
+        if (getActivity() != null) {
+            getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+        }
     }
 }
