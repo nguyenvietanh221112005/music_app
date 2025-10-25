@@ -45,4 +45,13 @@ public class UserController {
 
     return ResponseEntity.ok(response);
   }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getUserById(@PathVariable Integer id) {
+    return userService.getUserById(id)
+        .map(user -> ResponseEntity.ok(user))
+        .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body((User) Map.of("message", "Không tìm thấy người dùng có ID " + id)));
+  }
+
 }
