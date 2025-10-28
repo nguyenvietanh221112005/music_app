@@ -7,6 +7,8 @@ import com.example.music_app.model.TheLoai;
 import com.example.music_app.model.Users;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -42,4 +44,8 @@ public interface DataService {
 
     @POST("api/users/login")
     Call<Users> login(@Body Users user);
+
+    @GET("api/songs/search")
+    Call<List<BaiHat>> searchSongs(@Query("keyword") String keyword);
+
 }

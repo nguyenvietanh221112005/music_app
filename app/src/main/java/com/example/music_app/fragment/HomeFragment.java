@@ -54,13 +54,13 @@ public class HomeFragment extends Fragment {
         if (etSearch == null) return;
 
         etSearch.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), SearchActivity.class);
+            Intent intent = new Intent(getActivity(), Fragment_Tim_Kiem.class);
             startActivity(intent);
         });
 
         etSearch.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
-                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                Intent intent = new Intent(getContext(), SearchActivity.class);
                 startActivity(intent);
                 etSearch.clearFocus();
             }

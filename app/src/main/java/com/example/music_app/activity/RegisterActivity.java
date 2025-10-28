@@ -26,7 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private EditText inputTen, inputEmail, inputPassword;
     private Button buttonRegister;
-    private TextView tvLogin;
+    private TextView tvLogin , tvRegister;
     private DataService dataService;
 
     @Override
