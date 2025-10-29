@@ -14,8 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.music_app.R;
-import com.example.music_app.model.TheLoai;
 import com.example.music_app.activity.CategoryDetailActivity;
+import com.example.music_app.model.TheLoai;
+
 import java.util.ArrayList;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
@@ -62,7 +63,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         }
         // Nếu là đường dẫn tương đối
         else if (imageData.startsWith("/")) {
-            String fullUrl = "http://192.168.126.1:8080" + imageData;
+            String fullUrl = "192.168.1.7:8080" + imageData;
             loadUrlImage(holder.imgCategory, fullUrl);
         }
         else {

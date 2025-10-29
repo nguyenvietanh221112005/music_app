@@ -2,7 +2,7 @@ package com.example.music_app.utils;
 
 public class Constants {
     // Thay đổi nếu backend bạn dùng khác (10.0.2.2 là localhost trên Android emulator)
-    public static final String BASE_URL = "http://192.168.126.1:8080/api/";
+    public static final String BASE_URL = "http://192.168.1.7:8080/api/";
 
     // Key SharedPreferences
     public static final String PREF_NAME = "music_app_prefs";

@@ -25,8 +25,9 @@ public interface DataService {
     @GET("api/categories")
     Call<ArrayList<TheLoai>> getTheLoai();
 
-    @GET("api/theloai/{idTheLoai}/baihat")
-    Call<ArrayList<BaiHat>> getBaiHatByTheLoai(@Path("idTheLoai") int idTheLoai);
+    @GET("api/songs/category/{id}")
+    Call<ArrayList<BaiHat>> getBaiHatByTheLoai(@Path("id") int idTheLoai);
+
 
     @POST("api/favorites/add/{userId}/{songId}")
     Call<Void> addFavorite(@Path("userId") int userId, @Path("songId") int songId);

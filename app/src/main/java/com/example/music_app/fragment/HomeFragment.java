@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.music_app.R;
-import com.example.music_app.activity.MusicPlayerActivity;
+import com.example.music_app.activity.LikeListActivity;
 import com.example.music_app.activity.SearchActivity;
 import com.example.music_app.adapter.CategoryAdapter;
 import com.example.music_app.adapter.TopSongAdapter;
@@ -145,7 +145,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void openMusicPlayer(BaiHat baiHat) {
-        Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
+        Intent intent = new Intent(getActivity(), LikeListActivity.class);
         intent.putExtra("SONG_ID", baiHat.getId());
         intent.putExtra("SONG_NAME", baiHat.getTenBaiHat());
         intent.putExtra("ARTIST", baiHat.getCaSi());
