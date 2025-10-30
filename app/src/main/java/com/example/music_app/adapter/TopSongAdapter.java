@@ -33,8 +33,9 @@ public class TopSongAdapter extends RecyclerView.Adapter<TopSongAdapter.ViewHold
     private Set<Integer> favoriteSongs = new HashSet<>();
     private UserSessionManager sessionManager;
 
+    // ✅ Thêm position vào interface
     public interface OnSongClickListener {
-        void onSongClick(BaiHat baiHat);
+        void onSongClick(BaiHat baiHat, int position);
     }
 
     public TopSongAdapter(Context context, ArrayList<BaiHat> songList) {
@@ -130,11 +131,11 @@ public class TopSongAdapter extends RecyclerView.Adapter<TopSongAdapter.ViewHold
             });
         }
 
-        // ✅ Click vào item (trừ frameHeart) sẽ mở MusicPlayer
+        // ✅ Click vào item (trừ frameHeart) sẽ mở MusicPlayer - TRUYỀN POSITION
         holder.itemView.setOnClickListener(v -> {
-            Log.d("TopSongAdapter", "Item clicked: " + song.getTenBaiHat());
+            Log.d("TopSongAdapter", "Item clicked: " + song.getTenBaiHat() + " at position " + position);
             if (onSongClickListener != null) {
-                onSongClickListener.onSongClick(song);
+                onSongClickListener.onSongClick(song, position);  // ✅ Truyền position
             }
         });
     }

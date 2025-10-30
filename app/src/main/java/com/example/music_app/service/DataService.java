@@ -7,6 +7,8 @@ import com.example.music_app.model.TheLoai;
 import com.example.music_app.model.Users;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -25,9 +27,8 @@ public interface DataService {
     @GET("api/categories")
     Call<ArrayList<TheLoai>> getTheLoai();
 
-    @GET("api/theloai/{idTheLoai}/baihat")
-    Call<ArrayList<BaiHat>> getBaiHatByTheLoai(@Path("idTheLoai") int idTheLoai);
-
+    @GET("api/songs/category/{id}")
+    Call<ArrayList<BaiHat>> getBaiHatByTheLoai(@Path("id") int idTheLoai);
     @POST("api/favorites/add/{userId}/{songId}")
     Call<Void> addFavorite(@Path("userId") int userId, @Path("songId") int songId);
 
@@ -42,4 +43,7 @@ public interface DataService {
 
     @POST("api/users/login")
     Call<Users> login(@Body Users user);
+
+    @GET("api/songs/search")
+    Call<List<BaiHat>> searchSongs(@Query("keyword") String keyword);
 }

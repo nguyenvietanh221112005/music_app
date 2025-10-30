@@ -14,8 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.music_app.R;
-import com.example.music_app.model.TheLoai;
 import com.example.music_app.activity.CategoryDetailActivity;
+import com.example.music_app.model.TheLoai;
+
 import java.util.ArrayList;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
@@ -23,10 +24,21 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     private static final String TAG = "CategoryAdapter";
     Context context;
     ArrayList<TheLoai> list;
+    private OnCategoryClickListener onCategoryClickListener;
+
+    // ✅ Thêm interface để xử lý sự kiện click
+    public interface OnCategoryClickListener {
+        void onCategoryClick(TheLoai idTheLoai);
+    }
 
     public CategoryAdapter(Context context, ArrayList<TheLoai> list) {
         this.context = context;
         this.list = list;
+    }
+
+    // ✅ Thêm setter cho listener
+    public void setOnCategoryClickListener(OnCategoryClickListener listener) {
+        this.onCategoryClickListener = listener;
     }
 
     @NonNull
@@ -47,34 +59,34 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         if (imageData == null || imageData.isEmpty()) {
             Log.e(TAG, "Image data is null or empty");
             holder.imgCategory.setImageResource(R.drawable.default_category);
-            return;
+        } else {
+            Log.d(TAG, "Image data length: " + imageData.length());
+
+            // Kiểm tra nếu là base64
+            if (imageData.startsWith("data:image")) {
+                loadBase64Image(holder.imgCategory, imageData, tl.getTenTheLoai());
+            }
+            // Nếu là URL
+            else if (imageData.startsWith("http://") || imageData.startsWith("https://")) {
+                loadUrlImage(holder.imgCategory, imageData);
+            }
+            // Nếu là đường dẫn tương đối
+            else if (imageData.startsWith("/")) {
+                String fullUrl = "http://192.168.1.7:8080" + imageData;
+                loadUrlImage(holder.imgCategory, fullUrl);
+            }
+            else {
+                Log.e(TAG, "Unknown image format");
+                holder.imgCategory.setImageResource(R.drawable.default_category);
+            }
         }
 
-        Log.d(TAG, "Image data length: " + imageData.length());
-
-        // Kiểm tra nếu là base64
-        if (imageData.startsWith("data:image")) {
-            loadBase64Image(holder.imgCategory, imageData, tl.getTenTheLoai());
-        }
-
-        else if (imageData.startsWith("http://") || imageData.startsWith("https://")) {
-            loadUrlImage(holder.imgCategory, imageData);
-        }
-        // Nếu là đường dẫn tương đối
-        else if (imageData.startsWith("/")) {
-            String fullUrl = "http://192.168.126.1:8080" + imageData;
-            loadUrlImage(holder.imgCategory, fullUrl);
-        }
-        else {
-            Log.e(TAG, "Unknown image format");
-            holder.imgCategory.setImageResource(R.drawable.default_category);
-        }
-
-        // Thêm click listener
+        // ✅ Sửa lại click listener - sử dụng biến tl thay vì theLoai
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, CategoryDetailActivity.class);
-            intent.putExtra("category", tl);
-            context.startActivity(intent);
+            if (onCategoryClickListener != null) {
+
+                onCategoryClickListener.onCategoryClick(tl);
+            }
         });
     }
 

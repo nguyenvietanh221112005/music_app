@@ -2,15 +2,17 @@ package com.example.music_app.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.music_app.R;
-import com.example.music_app.model.TheLoai;
+import com.example.music_app.adapter.BaiHatTheLoaiAdapter;
 import com.example.music_app.model.BaiHat;
-import com.example.music_app.adapter.TopSongAdapter;
+import com.example.music_app.model.TheLoai;
 import com.example.music_app.service.APIService;
 import com.example.music_app.service.DataService;
 import com.squareup.picasso.Picasso;
@@ -19,15 +21,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CategoryDetailActivity extends AppCompatActivity {
+public class CategoryDetailActivity extends AppCompatActivity implements BaiHatTheLoaiAdapter.OnSongClickListener {
 
     private ImageView imgBack, imgCategory, imgPlayAll;
     private TextView tvCategoryName, tvSongCount, tvNoSongs;
     private RecyclerView recyclerSongs;
-    private TopSongAdapter songAdapter;
 
     private TheLoai category;
-    private ArrayList<BaiHat> songs = new ArrayList<>();
+    private ArrayList<BaiHat> songs;
+    private BaiHatTheLoaiAdapter songAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,13 @@ public class CategoryDetailActivity extends AppCompatActivity {
         initViews();
         getCategoryFromIntent();
         setupListeners();
-        loadSongsByCategory();
+
+        if (category != null) {
+            loadSongsByCategory(category.getIdTheLoai());
+        } else {
+            Toast.makeText(this, "Không nhận được thể loại!", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void initViews() {
@@ -45,13 +53,13 @@ public class CategoryDetailActivity extends AppCompatActivity {
         imgCategory = findViewById(R.id.imgCategory);
         imgPlayAll = findViewById(R.id.imgPlayAll);
         tvCategoryName = findViewById(R.id.tvCategoryName);
-
         tvNoSongs = findViewById(R.id.tvNoSongs);
+        tvSongCount = findViewById(R.id.tvSongCount);
         recyclerSongs = findViewById(R.id.recyclerSongs);
 
         recyclerSongs.setLayoutManager(new LinearLayoutManager(this));
-
-        songAdapter = new TopSongAdapter(this, songs);
+        songs = new ArrayList<>();
+        songAdapter = new BaiHatTheLoaiAdapter(this, songs, this); // truyền listener
         recyclerSongs.setAdapter(songAdapter);
     }
 
@@ -59,73 +67,55 @@ public class CategoryDetailActivity extends AppCompatActivity {
         category = (TheLoai) getIntent().getSerializableExtra("category");
         if (category != null) {
             tvCategoryName.setText(category.getTenTheLoai());
-            Picasso.get().load(category.getHinhAnh()).into(imgCategory);
+            Picasso.get()
+                    .load(category.getHinhAnh())
+                    .placeholder(R.drawable.music_placeholder)
+                    .error(R.drawable.music_placeholder)
+                    .into(imgCategory);
         }
     }
 
     private void setupListeners() {
         imgBack.setOnClickListener(v -> finish());
-
         imgPlayAll.setOnClickListener(v -> {
             if (!songs.isEmpty()) {
-                // Phát bài hát đầu tiên trong danh sách
-                openMusicPlayer(songs.get(0));
+                Toast.makeText(this, "🎵 Đang phát tất cả bài hát trong thể loại!", Toast.LENGTH_SHORT).show();
+                openMusicPlayer(songs.get(0), 0);
+            } else {
+                Toast.makeText(this, "Không có bài hát nào để phát!", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void loadSongsByCategory() {
-        if (category == null) return;
-
+    private void loadSongsByCategory(int idTheLoai) {
         DataService dataService = APIService.getService();
-        // Gọi API lấy bài hát theo thể loại
-        dataService.getBaiHatByTheLoai(category.getIdTheLoai()).enqueue(new Callback<ArrayList<BaiHat>>() {
+        Log.d("API_CALL", "Gọi API bài hát theo thể loại id=" + idTheLoai);
+
+        Call<ArrayList<BaiHat>> callback = dataService.getBaiHatByTheLoai(idTheLoai);
+        callback.enqueue(new Callback<ArrayList<BaiHat>>() {
             @Override
             public void onResponse(Call<ArrayList<BaiHat>> call, Response<ArrayList<BaiHat>> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
                     songs.clear();
                     songs.addAll(response.body());
+                    songAdapter.notifyDataSetChanged();
                     updateUI();
-                    setupSongClickListener();
+                    Log.d("API_RESPONSE", "Nhận " + songs.size() + " bài hát");
                 } else {
                     showNoSongs();
+                    Log.e("API_RESPONSE", "Không có bài hát nào trong thể loại này!");
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<BaiHat>> call, Throwable t) {
                 showNoSongs();
+                Log.e("API_ERROR", "Lỗi tải bài hát: " + t.getMessage());
             }
         });
     }
 
-    private void setupSongClickListener() {
-        songAdapter.setOnSongClickListener(this::openMusicPlayer);
-    }
-
-    private void openMusicPlayer(BaiHat baiHat) {
-        Intent intent = new Intent(this, MusicPlayerActivity.class);
-        intent.putExtra("SONG_ID", baiHat.getId());
-        intent.putExtra("SONG_NAME", baiHat.getTenBaiHat());
-        intent.putExtra("ARTIST", baiHat.getCaSi());
-        intent.putExtra("SONG_URL", baiHat.getLink());
-        intent.putExtra("SONG_IMAGE", baiHat.getHinhAnh());
-        intent.putExtra("SONG_OBJECT", baiHat);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-    }
-
     private void updateUI() {
-        if (songs.isEmpty()) {
-            showNoSongs();
-        } else {
-            showSongsList();
-        }
-
-        songAdapter.notifyDataSetChanged();
-    }
-
-    private void showSongsList() {
         recyclerSongs.setVisibility(RecyclerView.VISIBLE);
         tvNoSongs.setVisibility(TextView.GONE);
         tvSongCount.setText(songs.size() + " bài hát");
@@ -135,5 +125,23 @@ public class CategoryDetailActivity extends AppCompatActivity {
         recyclerSongs.setVisibility(RecyclerView.GONE);
         tvNoSongs.setVisibility(TextView.VISIBLE);
         tvSongCount.setText("0 bài hát");
+    }
+
+    // Mở MusicPlayer
+    private void openMusicPlayer(BaiHat baiHat, int position) {
+        Intent intent = new Intent(this, MusicPlayerActivity.class);
+        intent.putExtra("SONG_OBJECT", baiHat);
+        intent.putExtra("PLAYLIST", new ArrayList<>(songs));
+        intent.putExtra("POSITION", position);
+        Log.d("Activity_CategoryDetail", "🎵 Gửi playlist: " + songs.size() + " bài hát, vị trí: " + position);
+
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+    }
+
+    // Callback từ Adapter
+    @Override
+    public void onSongClick(BaiHat song, int position) {
+        openMusicPlayer(song, position);
     }
 }

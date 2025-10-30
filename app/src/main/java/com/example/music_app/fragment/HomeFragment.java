@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import com.example.music_app.activity.CategoryDetailActivity;
 
 public class HomeFragment extends Fragment {
 
@@ -31,6 +32,9 @@ public class HomeFragment extends Fragment {
     CategoryAdapter categoryAdapter;
     TopSongAdapter topSongAdapter;
     EditText etSearch;
+
+    // ✅ Lưu danh sách bài hát để truyền vào playlist
+    private ArrayList<BaiHat> topSongList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,28 +80,27 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<ArrayList<TheLoai>> call, Response<ArrayList<TheLoai>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     ArrayList<TheLoai> list = response.body();
-                    Log.d("HomeFragment", "Loaded categories: " + list.size());
-
-                    if (list.isEmpty()) {
-                        Log.e("HomeFragment", "Categories list is empty");
-                        return;
-                    }
 
                     categoryAdapter = new CategoryAdapter(getContext(), list);
+
+                    // ✅ Xử lý sự kiện click vào thể loại
+                    categoryAdapter.setOnCategoryClickListener(theLoai ->
+                            openCategoryDetail(theLoai)
+                    );
+
                     recyclerCategory.setAdapter(categoryAdapter);
                 } else {
-                    Log.e("HomeFragment", "Category API error: " + response.code());
                     Toast.makeText(getContext(), "Lỗi tải thể loại: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<TheLoai>> call, Throwable t) {
-                Log.e("HomeFragment", "Category API failure: " + t.getMessage());
                 Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
     private void loadTopBXH() {
         DataService dataService = APIService.getService();
@@ -113,6 +116,9 @@ public class HomeFragment extends Fragment {
                         return;
                     }
 
+                    // ✅ Lưu danh sách bài hát
+                    topSongList = list;
+
                     // Kiểm tra context trước khi khởi tạo adapter
                     if (getContext() == null) {
                         Log.e("HomeFragment", "Context is null, cannot create adapter");
@@ -122,8 +128,10 @@ public class HomeFragment extends Fragment {
                     // Sử dụng requireContext() để đảm bảo context không null
                     topSongAdapter = new TopSongAdapter(requireContext(), list);
 
-                    // Xử lý sự kiện click bài hát
-                    topSongAdapter.setOnSongClickListener(baiHat -> openMusicPlayer(baiHat));
+                    // ✅ Xử lý sự kiện click bài hát - truyền cả position
+                    topSongAdapter.setOnSongClickListener((baiHat, position) ->
+                            openMusicPlayer(baiHat, position)
+                    );
 
                     recyclerTopSongs.setAdapter(topSongAdapter);
                 } else {
@@ -144,18 +152,38 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void openMusicPlayer(BaiHat baiHat) {
+    // ✅ Thêm parameter position
+    private void openMusicPlayer(BaiHat baiHat, int position) {
         Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
-        intent.putExtra("SONG_ID", baiHat.getId());
-        intent.putExtra("SONG_NAME", baiHat.getTenBaiHat());
-        intent.putExtra("ARTIST", baiHat.getCaSi());
-        intent.putExtra("SONG_URL", baiHat.getLink());
-        intent.putExtra("SONG_IMAGE", baiHat.getHinhAnh());
         intent.putExtra("SONG_OBJECT", baiHat);
+
+        // ✅ Truyền playlist và position
+        if (topSongList != null && !topSongList.isEmpty()) {
+            intent.putExtra("PLAYLIST", topSongList);
+            intent.putExtra("POSITION", position);
+            Log.d("HomeFragment", "✅ Sending playlist: " + topSongList.size() + " songs, position: " + position);
+        } else {
+            Log.w("HomeFragment", "⚠️ Playlist is empty or null");
+        }
+
         startActivity(intent);
 
         if (getActivity() != null) {
             getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
         }
     }
+
+    private void openCategoryDetail(TheLoai theLoai) {
+        Intent intent = new Intent(getActivity(), CategoryDetailActivity.class);
+
+        // ✅ Truyền object TheLoai
+        intent.putExtra("category", theLoai);
+
+        startActivity(intent);
+
+        if (getActivity() != null) {
+            getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+        }
+    }
+
 }

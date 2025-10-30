@@ -1,6 +1,7 @@
 package com.example.music_app.model;
-import com.google.gson.annotations.SerializedName;
+import static com.example.music_app.utils.Constants.BASE_URL;
 
+import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class BaiHat implements Serializable {
@@ -10,11 +11,11 @@ public class BaiHat implements Serializable {
     private String hinhAnh;
     private String link;
 
+    // ====== GETTER ======
     public int getId() { return id; }
     public String getTenBaiHat() { return tenBaiHat; }
     public String getCaSi() { return caSi; }
 
-    // Xử lý URL giống như TheLoai
     public String getHinhAnh() {
         if (hinhAnh != null && hinhAnh.startsWith("/")) {
             return "http://192.168.126.1:8080" + hinhAnh;
@@ -22,7 +23,23 @@ public class BaiHat implements Serializable {
         return hinhAnh;
     }
 
-    public String getLink() { return link; }
+    public String getLink() {
+        if (link != null && (link.startsWith("http://") || link.startsWith("https://"))) {
+            return link;
+        }
+        if (link != null && link.startsWith("/")) {
+            return BASE_URL + link;
+        }
+        return link;
+    }
+
+    // ✅ THÊM SETTER - BẮT BUỘC ĐỂ RETROFIT PARSE DỮ LIỆU
+    public void setId(int id) { this.id = id; }
+    public void setTenBaiHat(String tenBaiHat) { this.tenBaiHat = tenBaiHat; }
+    public void setCaSi(String caSi) { this.caSi = caSi; }
+    public void setHinhAnh(String hinhAnh) { this.hinhAnh = hinhAnh; }
+    public void setLink(String link) { this.link = link; }
+
     @Override
     public String toString() {
         return "BaiHat{" +
@@ -30,6 +47,7 @@ public class BaiHat implements Serializable {
                 ", tenBaiHat='" + tenBaiHat + '\'' +
                 ", caSi='" + caSi + '\'' +
                 ", hinhAnh='" + hinhAnh + '\'' +
+                ", link='" + link + '\'' +
                 '}';
     }
 }
