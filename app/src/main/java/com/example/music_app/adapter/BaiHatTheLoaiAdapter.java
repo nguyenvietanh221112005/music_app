@@ -30,15 +30,21 @@ import retrofit2.Response;
 
 public class BaiHatTheLoaiAdapter extends RecyclerView.Adapter<BaiHatTheLoaiAdapter.ViewHolder> {
 
+    public interface OnSongClickListener {
+        void onSongClick(BaiHat song, int position);
+    }
+
     private final Context context;
     private final ArrayList<BaiHat> songs;
     private final Set<Integer> favoriteSongs = new HashSet<>();
     private final UserSessionManager sessionManager;
     private final DataService dataService;
+    private final OnSongClickListener listener;
 
-    public BaiHatTheLoaiAdapter(Context context, ArrayList<BaiHat> songs, int layoutType) {
+    public BaiHatTheLoaiAdapter(Context context, ArrayList<BaiHat> songs, OnSongClickListener listener) {
         this.context = context;
         this.songs = songs;
+        this.listener = listener;
         this.sessionManager = new UserSessionManager(context);
         this.dataService = APIService.getService();
         loadFavorites();
@@ -86,8 +92,14 @@ public class BaiHatTheLoaiAdapter extends RecyclerView.Adapter<BaiHatTheLoaiAdap
                 .into(holder.imgSong);
 
         updateHeartIcon(holder.imgLike, song.getId());
-
         holder.imgLike.setOnClickListener(v -> toggleFavorite(song, holder.imgLike));
+
+        // Click vào bài hát
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onSongClick(song, position); // gọi Activity mở MusicPlayer
+            }
+        });
     }
 
     private void updateHeartIcon(ImageView imgLike, int songId) {

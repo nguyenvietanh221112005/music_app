@@ -25,16 +25,24 @@ import retrofit2.Response;
 
 public class BaiHatYeuThichAdapter extends RecyclerView.Adapter<BaiHatYeuThichAdapter.ViewHolder> {
 
+    // Interface callback để gửi sự kiện click lên Activity
+    public interface OnSongClickListener {
+        void onSongClick(BaiHat song, int position);
+    }
+
     private final Context context;
     private final ArrayList<BaiHat> danhSachBaiHat;
     private final DataService dataService;
     private final int userId;
+    private final OnSongClickListener listener;
 
-    public BaiHatYeuThichAdapter(Context context, ArrayList<BaiHat> danhSachBaiHat, DataService dataService, int userId) {
+    public BaiHatYeuThichAdapter(Context context, ArrayList<BaiHat> danhSachBaiHat,
+                                 DataService dataService, int userId, OnSongClickListener listener) {
         this.context = context;
         this.danhSachBaiHat = danhSachBaiHat;
         this.dataService = dataService;
         this.userId = userId;
+        this.listener = listener;
     }
 
     @NonNull
@@ -51,14 +59,13 @@ public class BaiHatYeuThichAdapter extends RecyclerView.Adapter<BaiHatYeuThichAd
         holder.tvTenBaiHat.setText(baiHat.getTenBaiHat());
         holder.tvTenCaSi.setText(baiHat.getCaSi());
 
-        // Load ảnh bìa bằng Glide
         Glide.with(context)
                 .load(baiHat.getHinhAnh())
                 .placeholder(R.drawable.music_placeholder)
                 .error(R.drawable.music_placeholder)
                 .into(holder.imgBiaNhac);
 
-        // Xử lý click icon tim
+        // Click icon tim
         holder.imgTimYeuThich.setOnClickListener(v -> {
             int pos = holder.getAdapterPosition();
             if (pos != RecyclerView.NO_POSITION) {
@@ -66,10 +73,13 @@ public class BaiHatYeuThichAdapter extends RecyclerView.Adapter<BaiHatYeuThichAd
             }
         });
 
-        // Khi click vào bài hát
-        holder.itemView.setOnClickListener(v ->
-                Toast.makeText(context, "🎵 Đang phát: " + baiHat.getTenBaiHat(), Toast.LENGTH_SHORT).show()
-        );
+        // Click vào bài hát → gọi callback lên Activity
+        holder.itemView.setOnClickListener(v -> {
+            int pos = holder.getAdapterPosition();
+            if (pos != RecyclerView.NO_POSITION && listener != null) {
+                listener.onSongClick(baiHat, pos);
+            }
+        });
     }
 
     private void xoaKhoiYeuThich(int idBaiHat, int position) {

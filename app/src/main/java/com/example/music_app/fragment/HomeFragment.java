@@ -122,8 +122,8 @@ public class HomeFragment extends Fragment {
                     // Sử dụng requireContext() để đảm bảo context không null
                     topSongAdapter = new TopSongAdapter(requireContext(), list);
 
-                    // Xử lý sự kiện click bài hát
-                    topSongAdapter.setOnSongClickListener(baiHat -> openMusicPlayer(baiHat));
+//                    // Xử lý sự kiện click bài hát
+//                    topSongAdapter.setOnSongClickListener(baiHat -> openMusicPlayer(baiHat));
 
                     recyclerTopSongs.setAdapter(topSongAdapter);
                 } else {
@@ -144,18 +144,18 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void openMusicPlayer(BaiHat baiHat) {
-        Intent intent = new Intent(getActivity(), LikeListActivity.class);
-        intent.putExtra("SONG_ID", baiHat.getId());
-        intent.putExtra("SONG_NAME", baiHat.getTenBaiHat());
-        intent.putExtra("ARTIST", baiHat.getCaSi());
-        intent.putExtra("SONG_URL", baiHat.getLink());
-        intent.putExtra("SONG_IMAGE", baiHat.getHinhAnh());
-        intent.putExtra("SONG_OBJECT", baiHat);
-        startActivity(intent);
-
-        if (getActivity() != null) {
-            getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-        }
-    }
+//    private void openMusicPlayer(BaiHat baiHat) {
+//        Intent intent = new Intent(getActivity(), LikeListActivity.class);
+//        intent.putExtra("SONG_ID", baiHat.getId());
+//        intent.putExtra("SONG_NAME", baiHat.getTenBaiHat());
+//        intent.putExtra("ARTIST", baiHat.getCaSi());
+//        intent.putExtra("SONG_URL", baiHat.getLink());
+//        intent.putExtra("SONG_IMAGE", baiHat.getHinhAnh());
+//        intent.putExtra("SONG_OBJECT", baiHat);
+//        startActivity(intent);
+//
+//        if (getActivity() != null) {
+//            getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+//        }
+//    }
 }

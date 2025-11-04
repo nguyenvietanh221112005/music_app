@@ -1,5 +1,6 @@
 package com.example.music_app.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,10 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music_app.R;
+import com.example.music_app.activity.test;
 import com.example.music_app.adapter.BaiHatYeuThichAdapter;
 import com.example.music_app.model.BaiHat;
 import com.example.music_app.service.APIService;
 import com.example.music_app.service.DataService;
+import com.example.music_app.utils.UserSessionManager;
+
 
 import java.util.ArrayList;
 
@@ -35,7 +39,7 @@ public class LibraryFragment extends Fragment {
     private BaiHatYeuThichAdapter adapter;
     private ArrayList<BaiHat> danhSachYeuThich;
     private DataService dataService;
-    private final int userId = 1; // Giả định ID người dùng tạm thời
+    private UserSessionManager sessionManager;
 
     @Nullable
     @Override
@@ -52,6 +56,7 @@ public class LibraryFragment extends Fragment {
         recyclerThuVien.setHasFixedSize(true);
 
         dataService = APIService.getService();
+        sessionManager = new UserSessionManager(getContext());
         danhSachYeuThich = new ArrayList<>();
 
         taiDanhSachYeuThich();
@@ -60,6 +65,13 @@ public class LibraryFragment extends Fragment {
     }
 
     private void taiDanhSachYeuThich() {
+        if (!sessionManager.isLoggedIn()) {
+            hienThongBaoRong("Vui lòng đăng nhập để xem bài hát yêu thích!");
+            return;
+        }
+
+        int userId = sessionManager.getUserId();
+
         progressBar.setVisibility(View.VISIBLE);
         tvEmptyState.setVisibility(View.GONE);
         recyclerThuVien.setVisibility(View.GONE);
@@ -72,7 +84,13 @@ public class LibraryFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     danhSachYeuThich = response.body();
                     if (!danhSachYeuThich.isEmpty()) {
-                        adapter = new BaiHatYeuThichAdapter(getContext(), danhSachYeuThich, dataService, userId);
+                        adapter = new BaiHatYeuThichAdapter(
+                                getContext(),
+                                danhSachYeuThich,
+                                dataService,
+                                userId,
+                                (baiHat, position) -> openMusicPlayer(baiHat, position)
+                        );
                         recyclerThuVien.setAdapter(adapter);
                         recyclerThuVien.setVisibility(View.VISIBLE);
                         tvEmptyState.setVisibility(View.GONE);
@@ -99,5 +117,13 @@ public class LibraryFragment extends Fragment {
         recyclerThuVien.setVisibility(View.GONE);
         tvEmptyState.setVisibility(View.VISIBLE);
         tvEmptyState.setText(message);
+    }
+
+    private void openMusicPlayer(BaiHat baiHat, int position) {
+        Intent intent = new Intent(getContext(), test.class);
+        intent.putExtra("SONG_OBJECT", baiHat);
+        intent.putExtra("PLAYLIST", danhSachYeuThich);
+        intent.putExtra("POSITION", position);
+        startActivity(intent);
     }
 }

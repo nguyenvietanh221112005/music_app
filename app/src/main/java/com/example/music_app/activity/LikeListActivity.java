@@ -1,8 +1,8 @@
 package com.example.music_app.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,13 +15,13 @@ import com.example.music_app.service.DataService;
 import com.example.music_app.utils.UserSessionManager;
 
 import java.util.ArrayList;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LikeListActivity extends AppCompatActivity {
+public class LikeListActivity extends AppCompatActivity implements BaiHatYeuThichAdapter.OnSongClickListener {
 
-//    private ImageView imgBack;
     private RecyclerView recyclerLiked;
     private BaiHatYeuThichAdapter adapter;
     private ArrayList<BaiHat> likedSongs;
@@ -33,15 +33,11 @@ public class LikeListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_library);
 
-
         recyclerLiked = findViewById(R.id.recyclerThuVien);
-
         recyclerLiked.setLayoutManager(new LinearLayoutManager(this));
 
         dataService = APIService.getService();
         sessionManager = new UserSessionManager(this);
-
-
     }
 
     @Override
@@ -62,7 +58,7 @@ public class LikeListActivity extends AppCompatActivity {
             public void onResponse(Call<ArrayList<BaiHat>> call, Response<ArrayList<BaiHat>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     likedSongs = response.body();
-                    adapter = new BaiHatYeuThichAdapter(LikeListActivity.this, likedSongs, dataService, userId);
+                    adapter = new BaiHatYeuThichAdapter(LikeListActivity.this, likedSongs, dataService, userId, LikeListActivity.this);
                     recyclerLiked.setAdapter(adapter);
                     Log.d("LikeListActivity", "Loaded " + likedSongs.size() + " favorites");
                 } else {
@@ -78,11 +74,14 @@ public class LikeListActivity extends AppCompatActivity {
         });
     }
 
-//    private void setupListeners() {
-//        imgBack.setOnClickListener(v -> {
-//            Log.d("LikeListActivity", "Back button clicked!");
-//            finish();
-//        });
-//    }
-
+    @Override
+    public void onSongClick(BaiHat song, int position) {
+        // Mở MusicPlayerActivity (nhớ khai báo trong Manifest)
+        Intent intent = new Intent(this, test.class); // đổi tên class nếu khác
+        intent.putExtra("SONG_OBJECT", song);
+        intent.putExtra("PLAYLIST", likedSongs);
+        intent.putExtra("POSITION", position);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+    }
 }

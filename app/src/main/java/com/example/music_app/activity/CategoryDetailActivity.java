@@ -1,5 +1,6 @@
 package com.example.music_app.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -9,9 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.music_app.R;
-import com.example.music_app.model.TheLoai;
-import com.example.music_app.model.BaiHat;
 import com.example.music_app.adapter.BaiHatTheLoaiAdapter;
+import com.example.music_app.model.BaiHat;
+import com.example.music_app.model.TheLoai;
 import com.example.music_app.service.APIService;
 import com.example.music_app.service.DataService;
 import com.squareup.picasso.Picasso;
@@ -20,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CategoryDetailActivity extends AppCompatActivity {
+public class CategoryDetailActivity extends AppCompatActivity implements BaiHatTheLoaiAdapter.OnSongClickListener {
 
     private ImageView imgBack, imgCategory, imgPlayAll;
     private TextView tvCategoryName, tvSongCount, tvNoSongs;
@@ -58,7 +59,7 @@ public class CategoryDetailActivity extends AppCompatActivity {
 
         recyclerSongs.setLayoutManager(new LinearLayoutManager(this));
         songs = new ArrayList<>();
-        songAdapter = new BaiHatTheLoaiAdapter(this, songs, 1);
+        songAdapter = new BaiHatTheLoaiAdapter(this, songs, this); // truyền listener
         recyclerSongs.setAdapter(songAdapter);
     }
 
@@ -79,6 +80,7 @@ public class CategoryDetailActivity extends AppCompatActivity {
         imgPlayAll.setOnClickListener(v -> {
             if (!songs.isEmpty()) {
                 Toast.makeText(this, "🎵 Đang phát tất cả bài hát trong thể loại!", Toast.LENGTH_SHORT).show();
+                openMusicPlayer(songs.get(0), 0);
             } else {
                 Toast.makeText(this, "Không có bài hát nào để phát!", Toast.LENGTH_SHORT).show();
             }
@@ -123,5 +125,23 @@ public class CategoryDetailActivity extends AppCompatActivity {
         recyclerSongs.setVisibility(RecyclerView.GONE);
         tvNoSongs.setVisibility(TextView.VISIBLE);
         tvSongCount.setText("0 bài hát");
+    }
+
+    // Mở MusicPlayer
+    private void openMusicPlayer(BaiHat baiHat, int position) {
+        Intent intent = new Intent(this, test.class);
+        intent.putExtra("SONG_OBJECT", baiHat);
+        intent.putExtra("PLAYLIST", new ArrayList<>(songs));
+        intent.putExtra("POSITION", position);
+        Log.d("Activity_CategoryDetail", "🎵 Gửi playlist: " + songs.size() + " bài hát, vị trí: " + position);
+
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+    }
+
+    // Callback từ Adapter
+    @Override
+    public void onSongClick(BaiHat song, int position) {
+        openMusicPlayer(song, position);
     }
 }
