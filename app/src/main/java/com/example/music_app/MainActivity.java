@@ -3,10 +3,10 @@ package com.example.music_app;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import com.example.music_app.R;
+
+import com.example.music_app.fragment.AccountFragment;
 import com.example.music_app.fragment.HomeFragment;
 import com.example.music_app.fragment.LibraryFragment;
-import com.example.music_app.fragment.AccountFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
