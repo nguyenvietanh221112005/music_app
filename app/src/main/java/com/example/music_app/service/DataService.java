@@ -46,4 +46,7 @@ public interface DataService {
 
     @GET("api/songs/search")
     Call<List<BaiHat>> searchSongs(@Query("keyword") String keyword);
+
+    @GET("api/users/{id}")
+    Call<Users> getUserById(@Path("id") int id);
 }
