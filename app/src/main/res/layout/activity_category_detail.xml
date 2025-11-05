@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F8F8">
+    android:background="@drawable/gradient_background">
 
     <!-- Nút quay lại -->
     <ImageView
@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tên thể loại"
-        android:textColor="@color/black"
+        android:textColor="#e2e1e6"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/imgCategory"
@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0 bài hát"
-        android:textColor="@color/black"
+        android:textColor="#e2e1e6"
         android:textStyle="italic"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/imgPlayAll"

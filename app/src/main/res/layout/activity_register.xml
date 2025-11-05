@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
-
+        android:background="@drawable/wp2817765"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -43,6 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="40dp"
+                    android:drawableStart="@drawable/baseline_person_24"
                     android:hint="  Tên đăng nhập"
                     android:paddingLeft="10dp"
                     />
@@ -51,6 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="20dp"
+                    android:drawableLeft="@drawable/outline_alternate_email_24"
                     android:hint="  Email"
                     android:paddingLeft="10dp"
                     />
@@ -60,6 +62,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="20dp"
+                    android:drawableLeft="@drawable/outline_beenhere_24"
                     android:hint="  Mật khẩu"
                     android:inputType="textPassword"
                     android:paddingLeft="10dp"

@@ -8,6 +8,7 @@
 
     <!-- Ảnh bìa -->
     <ImageView
+        android:layout_marginLeft="4dp"
         android:id="@+id/imgBiaNhac"
         android:layout_width="80dp"
         android:layout_height="80dp"
@@ -19,13 +20,15 @@
 
     <!-- Tên bài hát -->
     <TextView
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
         android:id="@+id/tvTenBaiHat"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Tên bài hát"
+        android:text="     Tên bài hát"
         android:textStyle="bold"
-        android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         android:maxLines="1"
         android:ellipsize="end"
         app:layout_constraintStart_toEndOf="@id/imgBiaNhac"
@@ -34,11 +37,12 @@
 
     <!-- Ca sĩ -->
     <TextView
+        android:layout_marginLeft="12dp"
         android:id="@+id/tvTenCaSi"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Ca sĩ"
-        android:textColor="#757575"
+        android:text="      Ca sĩ"
+        android:textColor="#e2e1e6"
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@id/imgBiaNhac"
         app:layout_constraintTop_toBottomOf="@id/tvTenBaiHat"
@@ -51,6 +55,7 @@
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:padding="4dp"
+        android:contentDescription="yêu thích"
         app:srcCompat="@drawable/ic_heart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/imgBiaNhac"

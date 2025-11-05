@@ -32,7 +32,7 @@
             android:text="Tên bài hát"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#000000"
+            android:textColor="@color/white"
             android:maxLines="1"
             android:ellipsize="end" />
 
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:text="Tên ca sĩ"
             android:textSize="14sp"
-            android:textColor="#666666"
+            android:textColor="#e2e1e6"
             android:maxLines="1"
             android:ellipsize="end"
             android:layout_marginTop="4dp" />

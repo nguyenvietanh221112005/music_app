@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:background="#dbd3f5">
 
             <!-- Tiêu đề -->
             <TextView
@@ -45,7 +46,8 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:clipToPadding="false"
         android:paddingTop="8dp"
-        android:paddingBottom="16dp"/>
+        android:paddingBottom="16dp"
+        android:background="@drawable/gradient_background"/>
 
     <!-- TextView trống -->
     <TextView

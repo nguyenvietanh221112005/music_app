@@ -17,6 +17,7 @@
         <TextView
             android:id="@+id/tvHello"
             android:text="Xin chào!"
+            android:textColor="#e2e1e6"
             android:textStyle="bold"
             android:textSize="18sp"
             android:layout_width="wrap_content"
@@ -38,6 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Thể loại"
+        android:textColor="#e2e1e6"
         android:textSize="18sp"
         android:textStyle="bold"
         android:paddingStart="16dp"
@@ -56,6 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Top Bài Hát"
+        android:textColor="#e2e1e6"
         android:textSize="18sp"
         android:textStyle="bold"
         android:paddingStart="16dp"
