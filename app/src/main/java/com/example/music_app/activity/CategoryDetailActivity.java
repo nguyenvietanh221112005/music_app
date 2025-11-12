@@ -21,8 +21,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+//là một màn hình hiển thị chi tiết một thể loại và danh sách bài hát của thể loại đó
 public class CategoryDetailActivity extends AppCompatActivity implements BaiHatTheLoaiAdapter.OnSongClickListener {
-
+                                                                //màn hình này sẽ cài đặt interface của adapter để nhận call back
+                                                                //khi user click vào một bài hát trong danh sách
     private ImageView imgBack, imgCategory, imgPlayAll;
     private TextView tvCategoryName, tvSongCount, tvNoSongs;
     private RecyclerView recyclerSongs;
@@ -34,21 +36,22 @@ public class CategoryDetailActivity extends AppCompatActivity implements BaiHatT
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category_detail);
+        setContentView(R.layout.activity_category_detail);//gán layout XML activity_category_detail cho Activity (tải giao diện).
 
         initViews();
         getCategoryFromIntent();
         setupListeners();
 
-        if (category != null) {
-            loadSongsByCategory(category.getIdTheLoai());
+        if (category != null) {//nếu nhận được thể loại hợp lệ
+            loadSongsByCategory(category.getIdTheLoai());//gọi hàm loadSongsByCategory hiện thị danh sách bài hát theo chủ đề
         } else {
-            Toast.makeText(this, "Không nhận được thể loại!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Không nhận được thể loại!", Toast.LENGTH_SHORT).show();//không thì hiện thông báo
             finish();
         }
     }
 
     private void initViews() {
+        //ánh xạ đến các view tương ứng từ layout để thao tác
         imgBack = findViewById(R.id.imgBack);
         imgCategory = findViewById(R.id.imgCategory);
         imgPlayAll = findViewById(R.id.imgPlayAll);
@@ -56,17 +59,17 @@ public class CategoryDetailActivity extends AppCompatActivity implements BaiHatT
         tvNoSongs = findViewById(R.id.tvNoSongs);
         tvSongCount = findViewById(R.id.tvSongCount);
         recyclerSongs = findViewById(R.id.recyclerSongs);
-
+        //đặt LinearLayoutManager khiến RecyclerView hiển thị theo cột dọc (list).
         recyclerSongs.setLayoutManager(new LinearLayoutManager(this));
-        songs = new ArrayList<>();
-        songAdapter = new BaiHatTheLoaiAdapter(this, songs, this); // truyền listener
-        recyclerSongs.setAdapter(songAdapter);
+        songs = new ArrayList<>();//khởi tạo một danh sách trống lưu các bài hát khi api trả về
+        songAdapter = new BaiHatTheLoaiAdapter(this, songs, this); //khởi tạo adapter
+        recyclerSongs.setAdapter(songAdapter);//gắn adapter vào RecyclerView để hiện thị
     }
 
-    private void getCategoryFromIntent() {
+    private void getCategoryFromIntent() {//lấy dữ liệu thể loại từ activity trước đó thông qua Intent
         category = (TheLoai) getIntent().getSerializableExtra("category");
         if (category != null) {
-            tvCategoryName.setText(category.getTenTheLoai());
+            tvCategoryName.setText(category.getTenTheLoai());// hiển thị tên thể loại
             Picasso.get()
                     .load(category.getHinhAnh())
                     .placeholder(R.drawable.music_placeholder)
@@ -75,6 +78,8 @@ public class CategoryDetailActivity extends AppCompatActivity implements BaiHatT
         }
     }
 
+
+    //gắn hành vi cho các nút
     private void setupListeners() {
         imgBack.setOnClickListener(v -> finish());
         imgPlayAll.setOnClickListener(v -> {
@@ -88,7 +93,7 @@ public class CategoryDetailActivity extends AppCompatActivity implements BaiHatT
     }
 
     private void loadSongsByCategory(int idTheLoai) {
-        DataService dataService = APIService.getService();
+        DataService dataService = APIService.getService();//gọi API lấy bài theo thể loại
         Log.d("API_CALL", "Gọi API bài hát theo thể loại id=" + idTheLoai);
 
         Call<ArrayList<BaiHat>> callback = dataService.getBaiHatByTheLoai(idTheLoai);
@@ -96,9 +101,9 @@ public class CategoryDetailActivity extends AppCompatActivity implements BaiHatT
             @Override
             public void onResponse(Call<ArrayList<BaiHat>> call, Response<ArrayList<BaiHat>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
-                    songs.clear();
-                    songs.addAll(response.body());
-                    songAdapter.notifyDataSetChanged();
+                    songs.clear();//xóa dữ liệu cũ.
+                    songs.addAll(response.body());//thêm bài hát mới vào danh sách
+                    songAdapter.notifyDataSetChanged();//thông báo adapter cập nhật giao diện
                     updateUI();
                     Log.d("API_RESPONSE", "Nhận " + songs.size() + " bài hát");
                 } else {
@@ -135,7 +140,7 @@ public class CategoryDetailActivity extends AppCompatActivity implements BaiHatT
         intent.putExtra("POSITION", position);
         Log.d("Activity_CategoryDetail", "🎵 Gửi playlist: " + songs.size() + " bài hát, vị trí: " + position);
 
-        startActivity(intent);
+        startActivity(intent);//bắt đầu activity mới
         overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
     }
 
@@ -144,4 +149,5 @@ public class CategoryDetailActivity extends AppCompatActivity implements BaiHatT
     public void onSongClick(BaiHat song, int position) {
         openMusicPlayer(song, position);
     }
+
 }

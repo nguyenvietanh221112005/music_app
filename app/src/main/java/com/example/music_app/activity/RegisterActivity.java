@@ -26,7 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private EditText inputTen, inputEmail, inputPassword;
     private Button buttonRegister;
-    private TextView tvLogin;
+    private TextView tvLogin ;
     private DataService dataService;
 
     @Override
@@ -60,6 +60,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean validateInput(String ten, String email, String password) {
+
+        Log.d(TAG, "Email nhập vào: '" + email + "' (length = " + email.length() + ")");
         if (ten.isEmpty()) {
             inputTen.setError("Vui lòng nhập tên");
             return false;
@@ -120,4 +122,3 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 }
-

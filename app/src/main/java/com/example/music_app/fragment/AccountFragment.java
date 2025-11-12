@@ -1,17 +1,15 @@
 package com.example.music_app.fragment;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.music_app.activity.ChangeAccountActivity;
 import com.example.music_app.activity.RegisterActivity;
 import com.example.music_app.utils.UserSessionManager;
 
@@ -21,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.music_app.R;
-import com.example.music_app.activity.LoginActivity;
 import com.example.music_app.model.Users;
 import com.example.music_app.service.APIService;
 import com.example.music_app.service.DataService;
@@ -32,7 +29,7 @@ import retrofit2.Response;
 
 public class AccountFragment extends Fragment {
 
-    private TextView tvUserName, tvUserEmail;
+    private TextView tvUserName, tvUserEmail, etChangeAccount;
     private Button btnLogout;
 
     private UserSessionManager sessionManager;
@@ -47,7 +44,7 @@ public class AccountFragment extends Fragment {
         tvUserName = view.findViewById(R.id.tvUserName);
         tvUserEmail = view.findViewById(R.id.tvUserEmail);
         btnLogout = view.findViewById(R.id.btnLogout);
-
+        etChangeAccount = view.findViewById(R.id.etChangeAccount);
         //  Khởi tạo sessionManager , khi context đã sẵn sàng
         sessionManager = new UserSessionManager(requireContext());
 
@@ -72,6 +69,13 @@ public class AccountFragment extends Fragment {
         });
 
 
+        etChangeAccount.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ChangeAccountActivity.class);
+            startActivity(intent);
+        });
+
+
+
         return view;
     }
 
@@ -83,6 +87,8 @@ public class AccountFragment extends Fragment {
             tvUserName.setText("Không thể kết nối server");
             return;
         }
+
+
 
         Call<Users> call = dataService.getUserById(userId);
         call.enqueue(new Callback<Users>() {
@@ -106,5 +112,18 @@ public class AccountFragment extends Fragment {
                 Log.e("AccountFragment", "❌ Lỗi API: " + t.getMessage());
             }
         });
+
+
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        int userId = sessionManager.getUserId();
+        if (userId != -1) {
+            loadUserInfo(userId);
+        }
+    }
+
+
 }

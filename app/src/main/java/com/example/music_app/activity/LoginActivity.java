@@ -25,7 +25,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    TextView tvTitle;
+    TextView tvRegister;
     EditText inputEmail, inputPassword;
     Button buttonLogin;
     DataService dataService;
@@ -39,9 +39,14 @@ public class LoginActivity extends AppCompatActivity {
         inputEmail = findViewById(R.id.edtEmail);
         inputPassword = findViewById(R.id.edtPassword);
         buttonLogin = findViewById(R.id.btnLogin);
-
+        tvRegister = findViewById(R.id.tvRegister) ;
         dataService = APIService.getService();
         sessionManager = new UserSessionManager(this);
+
+        tvRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
+            startActivity(intent);
+        });
 
         // Kiểm tra nếu đã đăng nhập
         if (sessionManager.isLoggedIn()) {
@@ -86,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d(TAG, "Đăng nhập thành công, user_id: " + loggedUser.getUser_id());
 
                         // Lưu session
-                        sessionManager.createLoginSession(loggedUser.getUser_id(), email);
+                        sessionManager.createLoginSession(loggedUser.getUser_id(), email,password);
 
                         Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
 

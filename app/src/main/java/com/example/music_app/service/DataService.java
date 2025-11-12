@@ -4,16 +4,19 @@ package com.example.music_app.service;
 import com.example.music_app.model.ApiResponse;
 import com.example.music_app.model.BaiHat;
 import com.example.music_app.model.TheLoai;
+import com.example.music_app.model.UserUpdate;
 import com.example.music_app.model.Users;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -49,4 +52,10 @@ public interface DataService {
 
     @GET("api/users/{id}")
     Call<Users> getUserById(@Path("id") int id);
+
+    @PUT("api/users/{id}/update")
+    Call<Map<String, Object>> updateUserInfo(
+            @Path("id") Integer userId,
+            @Body UserUpdate body //
+    );
 }

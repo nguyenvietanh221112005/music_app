@@ -2,69 +2,97 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@drawable/gradient_background"
+    tools:context=".LibraryActivity">
 
-    <!-- AppBar -->
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <!-- Phần Header -->
+    <LinearLayout
+        android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="40dp"
+        android:paddingBottom="20dp"
+        android:gravity="center_vertical">
 
-        android:elevation="6dp">
+        <!-- Ảnh trái tim nằm trong khung tròn -->
+        <FrameLayout
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:background="@drawable/bg_album_art"
+            android:layout_marginEnd="16dp"
+            android:elevation="4dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:background="#dbd3f5">
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_traitimtrang"
+                android:layout_gravity="center"
+                android:contentDescription="@string/app_name"/>
+        </FrameLayout>
 
-            <!-- Tiêu đề -->
+        <!-- Thông tin playlist -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Playlist"
+                android:textSize="14sp"
+                android:textColor="#BDBDBD"/>
+
             <TextView
                 android:id="@+id/tvTitle"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Thư Viện Của Tôi"
-                android:textSize="22sp"
+                android:text="Bài hát đã thích"
+                android:textColor="@android:color/white"
                 android:textStyle="bold"
-                android:textColor="@color/purple_200"
-                android:gravity="center"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.appbar.AppBarLayout>
+                android:textSize="26sp"
+                android:layout_marginTop="4dp"/>
 
-    <!-- RecyclerView -->
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Danh sách bài hát (RecyclerView) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerThuVien"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginTop="200dp"
+        android:background="@android:color/transparent"
+        android:paddingHorizontal="16dp"
         android:clipToPadding="false"
-        android:paddingTop="8dp"
-        android:paddingBottom="16dp"
-        android:background="@drawable/gradient_background"/>
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <!-- TextView trống -->
+    <!-- Khi không có bài hát yêu thích -->
     <TextView
         android:id="@+id/tvEmptyState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Chưa có bài hát yêu thích"
         android:textSize="16sp"
-        android:textColor="#757575"
-        android:visibility="gone"
-        android:layout_gravity="center"/>
+        android:textColor="#BDBDBD"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
-    <!-- ProgressBar -->
+    <!-- ProgressBar khi loading -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:visibility="gone"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

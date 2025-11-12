@@ -33,7 +33,7 @@ public class TopSongAdapter extends RecyclerView.Adapter<TopSongAdapter.ViewHold
     private Set<Integer> favoriteSongs = new HashSet<>();
     private UserSessionManager sessionManager;
 
-    // ✅ Thêm position vào interface
+
     public interface OnSongClickListener {
         void onSongClick(BaiHat baiHat, int position);
     }
@@ -88,12 +88,10 @@ public class TopSongAdapter extends RecyclerView.Adapter<TopSongAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         BaiHat song = songList.get(position);
 
-        // Hiển thị tên bài hát
+
         if (holder.tvSongName != null) {
             holder.tvSongName.setText(song.getTenBaiHat());
         }
-
-        // Hiển thị tên ca sĩ từ database
         if (holder.tvSinger != null) {
             String caSi = song.getCaSi();
             if (caSi != null && !caSi.trim().isEmpty()) {
@@ -104,7 +102,6 @@ public class TopSongAdapter extends RecyclerView.Adapter<TopSongAdapter.ViewHold
             }
         }
 
-        // Hiển thị hình ảnh
         if (holder.imgSong != null) {
             Glide.with(context)
                     .load(song.getHinhAnh())
@@ -113,40 +110,33 @@ public class TopSongAdapter extends RecyclerView.Adapter<TopSongAdapter.ViewHold
                     .into(holder.imgSong);
         }
 
-        // Cập nhật trạng thái yêu thích
         if (holder.imgHeart != null) {
             updateFavoriteIcon(holder.imgHeart, song.getId());
         }
 
-        // ✅ QUAN TRỌNG: Set listener cho FrameLayout để toggle favorite
         if (holder.frameHeart != null) {
-            // Xóa listener cũ trước khi set mới (tránh duplicate)
+
             holder.frameHeart.setOnClickListener(null);
 
             holder.frameHeart.setOnClickListener(v -> {
                 Log.d("TopSongAdapter", "Heart clicked for: " + song.getTenBaiHat());
-                // Chỉ xử lý toggle favorite, KHÔNG gọi onSongClick
                 toggleFavorite(song.getId(), holder.imgHeart);
-                // Không return true/false ở đây vì onClick tự động consume event
             });
         }
 
-        // ✅ Click vào item (trừ frameHeart) sẽ mở MusicPlayer - TRUYỀN POSITION
         holder.itemView.setOnClickListener(v -> {
             Log.d("TopSongAdapter", "Item clicked: " + song.getTenBaiHat() + " at position " + position);
             if (onSongClickListener != null) {
-                onSongClickListener.onSongClick(song, position);  // ✅ Truyền position
+                onSongClickListener.onSongClick(song, position);
             }
         });
     }
 
     private void updateFavoriteIcon(ImageView imgFavorite, int songId) {
         if (favoriteSongs.contains(songId)) {
-            // Màu đỏ khi đã yêu thích
             imgFavorite.setColorFilter(ContextCompat.getColor(context, android.R.color.holo_red_dark));
             Log.d("TopSongAdapter", "Song " + songId + " is favorite (RED)");
         } else {
-            // Màu xám khi chưa yêu thích
             imgFavorite.setColorFilter(ContextCompat.getColor(context, android.R.color.darker_gray));
             Log.d("TopSongAdapter", "Song " + songId + " is not favorite (GRAY)");
         }
@@ -162,7 +152,6 @@ public class TopSongAdapter extends RecyclerView.Adapter<TopSongAdapter.ViewHold
         DataService dataService = APIService.getService();
 
         if (favoriteSongs.contains(songId)) {
-            // ❌ XÓA khỏi yêu thích
             Log.d("TopSongAdapter", "Removing favorite: " + songId);
             dataService.deleteFavorite(userId, songId).enqueue(new Callback<Void>() {
                 @Override
@@ -185,7 +174,6 @@ public class TopSongAdapter extends RecyclerView.Adapter<TopSongAdapter.ViewHold
                 }
             });
         } else {
-            // ✅ THÊM vào yêu thích
             Log.d("TopSongAdapter", "Adding favorite: " + songId);
             dataService.addFavorite(userId, songId).enqueue(new Callback<Void>() {
                 @Override

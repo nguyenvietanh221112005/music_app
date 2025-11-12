@@ -36,7 +36,7 @@ public class BaiHatTheLoaiAdapter extends RecyclerView.Adapter<BaiHatTheLoaiAdap
 
     private final Context context;
     private final ArrayList<BaiHat> songs;
-    private final Set<Integer> favoriteSongs = new HashSet<>();
+    private final Set<Integer> favoriteSongs = new HashSet<>();//Set chứa id của các bài đã yêu thích. Dùng để quyết định màu icon tim.
     private final UserSessionManager sessionManager;
     private final DataService dataService;
     private final OnSongClickListener listener;
@@ -48,21 +48,26 @@ public class BaiHatTheLoaiAdapter extends RecyclerView.Adapter<BaiHatTheLoaiAdap
         this.sessionManager = new UserSessionManager(context);
         this.dataService = APIService.getService();
         loadFavorites();
+        //tức là khi adapter được tạo sẽ tự gọi API lấy danh sách favorite của user (nếu đã đăng nhập) và điền favoriteSongs.
+        // Khi dữ liệu favorite về, adapter gọi notifyDataSetChanged() để refresh UI (đổi màu tim tương ứng).
     }
 
+
+    //lấy danh sách favorite ban đầu
     private void loadFavorites() {
         if (!sessionManager.isLoggedIn()) return;
 
         int userId = sessionManager.getUserId();
-        dataService.getFavorites(userId).enqueue(new Callback<ArrayList<BaiHat>>() {
+        dataService.getFavorites(userId).enqueue(new Callback<ArrayList<BaiHat>>() {//gọi API lấy danh sách bai hát yêu thích
             @Override
             public void onResponse(Call<ArrayList<BaiHat>> call, Response<ArrayList<BaiHat>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    favoriteSongs.clear();
+                if (response.isSuccessful() && response.body() != null) {//nếu có dữ liệu trả về
+                    favoriteSongs.clear();//Xóa toàn bộ dữ liệu yêu thích cũ trong bộ nhớ tạm (Set)
+                                            // sau đó cập nhật lại hoàn toàn bằng dữ liệu mới từ server
                     for (BaiHat s : response.body()) {
-                        favoriteSongs.add(s.getId());
+                        favoriteSongs.add(s.getId());//Thêm các ID bài hát mới được server trả về
                     }
-                    notifyDataSetChanged();
+                    notifyDataSetChanged();//gọi hàm này để RecyclerView cập nhật
                 }
             }
 
@@ -73,6 +78,8 @@ public class BaiHatTheLoaiAdapter extends RecyclerView.Adapter<BaiHatTheLoaiAdap
         });
     }
 
+
+    //Tạo giao diện (layout) cho một item trong danh sách bằng cách đọc file item_list_category.xml.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -80,6 +87,8 @@ public class BaiHatTheLoaiAdapter extends RecyclerView.Adapter<BaiHatTheLoaiAdap
         return new ViewHolder(view);
     }
 
+
+    //gán dữ liệu cho từng item
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         BaiHat song = songs.get(position);
@@ -102,13 +111,17 @@ public class BaiHatTheLoaiAdapter extends RecyclerView.Adapter<BaiHatTheLoaiAdap
         });
     }
 
+
+    //đổi màu trái tim
     private void updateHeartIcon(ImageView imgLike, int songId) {
-        int color = favoriteSongs.contains(songId)
-                ? ContextCompat.getColor(context, android.R.color.holo_red_dark)
+        int color = favoriteSongs.contains(songId)//nếu songID có trong danh sách set
+                ? ContextCompat.getColor(context, android.R.color.holo_red_dark)//đổi màu trái tim
                 : ContextCompat.getColor(context, android.R.color.darker_gray);
         imgLike.setColorFilter(color);
     }
 
+
+    //thêm / xóa yêu thích
     private void toggleFavorite(BaiHat song, ImageView imgLike) {
         if (!sessionManager.isLoggedIn()) {
             Toast.makeText(context, "Vui lòng đăng nhập để yêu thích bài hát", Toast.LENGTH_SHORT).show();
@@ -118,7 +131,7 @@ public class BaiHatTheLoaiAdapter extends RecyclerView.Adapter<BaiHatTheLoaiAdap
         int userId = sessionManager.getUserId();
         int songId = song.getId();
 
-        if (favoriteSongs.contains(songId)) {
+        if (favoriteSongs.contains(songId)) {//nếu đã yêu thích thì gọi xóa yêu thích
             dataService.deleteFavorite(userId, songId).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
@@ -134,7 +147,7 @@ public class BaiHatTheLoaiAdapter extends RecyclerView.Adapter<BaiHatTheLoaiAdap
                 }
             });
         } else {
-            dataService.addFavorite(userId, songId).enqueue(new Callback<Void>() {
+            dataService.addFavorite(userId, songId).enqueue(new Callback<Void>() {//nếu chưa yêu thích thì gọi thêm yêu thích
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
@@ -156,7 +169,7 @@ public class BaiHatTheLoaiAdapter extends RecyclerView.Adapter<BaiHatTheLoaiAdap
         return songs != null ? songs.size() : 0;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {//Giữ tham chiếu đến các View con bên trong mỗi item của RecyclerView
         TextView tvSongName, tvSinger;
         ImageView imgSong, imgLike;
         public ViewHolder(@NonNull View itemView) {

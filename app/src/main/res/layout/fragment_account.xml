@@ -1,69 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:background="#2C2C2C"
-    android:padding="16dp">
+    android:background="@drawable/gradient_background"
+    android:padding="24dp">
 
-    <!-- Avatar + Thông tin người dùng -->
+    <!-- Nội dung chính -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:paddingTop="24dp"
-        android:paddingBottom="16dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imgAvatar"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/ic_person"
-            android:background="@drawable/ic_person"
-            android:padding="8dp"
-            android:scaleType="centerCrop" />
-
-        <TextView
-            android:id="@+id/tvUserName"
-            android:layout_width="250dp"
+        <!-- Header hồ sơ -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="Tên người dùng"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="48dp">
 
-        <TextView
-            android:id="@+id/tvUserEmail"
-            android:layout_width="250dp"
+            <!-- Avatar -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_marginEnd="24dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_person"
+                app:shapeAppearanceOverlay="@style/CircleImageView"
+                app:strokeColor="#FFFFFF"
+                app:strokeWidth="2dp" />
+
+            <!-- Thông tin người dùng -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hồ sơ"
+                    android:textSize="16sp"
+                    android:textColor="#E0E0E0"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/tvUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="cơn đau kia sẽ nguôi"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:id="@+id/tvUserEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="email@example.com"
+                    android:textColor="#BBBBBB"
+                    android:textSize="19sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Đường chia -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#3E3E3E"
+            android:layout_marginVertical="32dp" />
+
+        <!-- Chức năng chỉnh sửa tài khoản -->
+        <LinearLayout
+            android:id="@+id/layoutChangeAccount"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:text="email@example.com"
-            android:textColor="#BBBBBB"
-            android:textSize="14sp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:background="@drawable/bg_input_dark"
+            android:layout_marginBottom="20dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_account"
+                app:tint="@android:color/white"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/etChangeAccount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Chỉnh sửa thông tin tài khoản"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- Gạch chia -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#444444"
-        android:layout_marginVertical="16dp" />
-
-    <!-- Nút đăng xuất -->
+    <!-- Nút đăng xuất: Luôn ở đáy -->
     <Button
         android:id="@+id/btnLogout"
-        android:layout_width="200dp"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Đăng xuất"
         android:textAllCaps="false"
-        android:backgroundTint="#E53935"
-        android:textColor="#FFFFFF"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
-        android:paddingVertical="8dp" />
+        android:backgroundTint="#E53935"
+        android:paddingVertical="10dp"
+        android:layout_marginTop="12dp" />
 </LinearLayout>

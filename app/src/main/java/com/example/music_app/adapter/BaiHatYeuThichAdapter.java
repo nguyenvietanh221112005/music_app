@@ -23,11 +23,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+//Là cầu nối giữa dữ liệu (danh sách bài hát yêu thích từ server) và giao diện hiển thị trong RecyclerView.
 public class BaiHatYeuThichAdapter extends RecyclerView.Adapter<BaiHatYeuThichAdapter.ViewHolder> {
 
-    // Interface callback để gửi sự kiện click lên Activity
+    // Interface  định nghĩa hành vi callback.
     public interface OnSongClickListener {
-        void onSongClick(BaiHat song, int position);
+        void onSongClick(BaiHat song, int position);//khi nào người dùng click vào bài hát, thì hãy implement (cài đặt) interface này.”
     }
 
     private final Context context;
@@ -47,18 +48,21 @@ public class BaiHatYeuThichAdapter extends RecyclerView.Adapter<BaiHatYeuThichAd
 
     @NonNull
     @Override
+    //Tạo giao diện (layout) cho một item trong danh sách
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_baihatyeuthich, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
+    //Gán dữ liệu thực tế cho từng dòng hiển thị:
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        BaiHat baiHat = danhSachBaiHat.get(position);
-
+        BaiHat baiHat = danhSachBaiHat.get(position);//Lấy dữ liệu bài hát tại vị trí position trong danh sách bài hát
+        //Gán các dữ liệu vào các view con
         holder.tvTenBaiHat.setText(baiHat.getTenBaiHat());
         holder.tvTenCaSi.setText(baiHat.getCaSi());
 
+        //thư viện Glide – một công cụ giúp tải ảnh từ Internet (hoặc file nội bộ) rồi hiển thị lên ImageView
         Glide.with(context)
                 .load(baiHat.getHinhAnh())
                 .placeholder(R.drawable.music_placeholder)
@@ -81,6 +85,7 @@ public class BaiHatYeuThichAdapter extends RecyclerView.Adapter<BaiHatYeuThichAd
             }
         });
     }
+
 
     private void xoaKhoiYeuThich(int idBaiHat, int position) {
         Call<Void> call = dataService.deleteFavorite(userId, idBaiHat);
@@ -111,11 +116,13 @@ public class BaiHatYeuThichAdapter extends RecyclerView.Adapter<BaiHatYeuThichAd
         return danhSachBaiHat != null ? danhSachBaiHat.size() : 0;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {//Giữ tham chiếu đến các View con bên trong mỗi item của RecyclerView
+                                                                    //, giúp Adapter có thể truy cập và gán dữ liệu nhanh hơn, không cần gọi lại findViewById() nhiều lần.
         ImageView imgBiaNhac, imgTimYeuThich;
         TextView tvTenBaiHat, tvTenCaSi;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {//đại diện cho một dòng (item) trong danh sách RecyclerView.
+                                                    //lưu các view con (TextView, ImageView…) để hiển thị thông tin của bài hát.
             super(itemView);
             imgBiaNhac = itemView.findViewById(R.id.imgBiaNhac);
             imgTimYeuThich = itemView.findViewById(R.id.imgTimYeuThich);

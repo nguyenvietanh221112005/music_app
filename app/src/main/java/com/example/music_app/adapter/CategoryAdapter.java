@@ -26,7 +26,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     ArrayList<TheLoai> list;
     private OnCategoryClickListener onCategoryClickListener;
 
-    // ✅ Thêm interface để xử lý sự kiện click
     public interface OnCategoryClickListener {
         void onCategoryClick(TheLoai idTheLoai);
     }
@@ -36,7 +35,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         this.list = list;
     }
 
-    // ✅ Thêm setter cho listener
     public void setOnCategoryClickListener(OnCategoryClickListener listener) {
         this.onCategoryClickListener = listener;
     }
@@ -62,15 +60,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         } else {
             Log.d(TAG, "Image data length: " + imageData.length());
 
-            // Kiểm tra nếu là base64
+
             if (imageData.startsWith("data:image")) {
                 loadBase64Image(holder.imgCategory, imageData, tl.getTenTheLoai());
             }
-            // Nếu là URL
+
             else if (imageData.startsWith("http://") || imageData.startsWith("https://")) {
                 loadUrlImage(holder.imgCategory, imageData);
             }
-            // Nếu là đường dẫn tương đối
+
             else if (imageData.startsWith("/")) {
                 String fullUrl = "http://192.168.1.7:8080" + imageData;
                 loadUrlImage(holder.imgCategory, fullUrl);
@@ -81,7 +79,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             }
         }
 
-        // ✅ Sửa lại click listener - sử dụng biến tl thay vì theLoai
+
         holder.itemView.setOnClickListener(v -> {
             if (onCategoryClickListener != null) {
 
@@ -94,7 +92,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         try {
             Log.d(TAG, "Attempting to load base64 image for: " + categoryName);
 
-            // Tách phần base64 thực sự
             String base64Image;
             if (base64Data.contains(",")) {
                 base64Image = base64Data.split(",")[1];
@@ -102,16 +99,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 base64Image = base64Data;
             }
 
-            // Loại bỏ khoảng trắng và newline
+
             base64Image = base64Image.replaceAll("\\s+", "");
 
             Log.d(TAG, "Cleaned base64 length: " + base64Image.length());
 
-            // Decode base64 thành byte array
+
             byte[] decodedBytes = Base64.decode(base64Image, Base64.DEFAULT);
             Log.d(TAG, "Decoded bytes length: " + decodedBytes.length);
 
-            // Chuyển byte array thành Bitmap
+
             Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
 
             if (bitmap != null) {

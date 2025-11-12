@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.content.Intent;
 
@@ -17,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.music_app.MainActivity;
 import com.example.music_app.R;
 import com.example.music_app.activity.MusicPlayerActivity;
 import com.example.music_app.adapter.SearchMusicAdapter;
@@ -33,8 +35,9 @@ import retrofit2.Response;
 
 public class Fragment_Tim_Kiem  extends Fragment{
     private EditText etSearch;
+    private ImageButton btnBack ;
     private RecyclerView recyclerSearchResults;
-    private LinearLayout layoutSuggestions;
+
     private SearchMusicAdapter searchAdapter;
     private List<BaiHat> baiHatList = new ArrayList<>();
 
@@ -48,12 +51,18 @@ public class Fragment_Tim_Kiem  extends Fragment{
         // Ánh xạ view
         etSearch = view.findViewById(R.id.etSearch);
         recyclerSearchResults = view.findViewById(R.id.recyclerSearchResults);
-        layoutSuggestions = view.findViewById(R.id.layoutSuggestions);
+
+        btnBack = view.findViewById(R.id.btnBack);
 
         // Thiết lập RecyclerView
         searchAdapter = new SearchMusicAdapter(getContext(), baiHatList);
         recyclerSearchResults.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerSearchResults.setAdapter(searchAdapter);
+
+        btnBack.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+        });
 
         searchAdapter.setOnItemClickListener((baiHat, position) -> {
             openMusicPlayer(baiHat, position);
@@ -69,11 +78,11 @@ public class Fragment_Tim_Kiem  extends Fragment{
                 String keyword = s.toString().trim();
                 if (!keyword.isEmpty()) {
                     searchSongs(keyword);
-                    layoutSuggestions.setVisibility(View.GONE);
+
                     recyclerSearchResults.setVisibility(View.VISIBLE);
                 } else {
                     recyclerSearchResults.setVisibility(View.GONE);
-                    layoutSuggestions.setVisibility(View.VISIBLE);
+
                 }
             }
 

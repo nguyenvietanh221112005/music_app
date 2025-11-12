@@ -33,7 +33,6 @@ public class HomeFragment extends Fragment {
     TopSongAdapter topSongAdapter;
     EditText etSearch;
 
-    // ✅ Lưu danh sách bài hát để truyền vào playlist
     private ArrayList<BaiHat> topSongList;
 
     @Override
@@ -83,7 +82,6 @@ public class HomeFragment extends Fragment {
 
                     categoryAdapter = new CategoryAdapter(getContext(), list);
 
-                    // ✅ Xử lý sự kiện click vào thể loại
                     categoryAdapter.setOnCategoryClickListener(theLoai ->
                             openCategoryDetail(theLoai)
                     );
@@ -115,20 +113,16 @@ public class HomeFragment extends Fragment {
                         Log.e("HomeFragment", "Songs list is empty");
                         return;
                     }
-
-                    // ✅ Lưu danh sách bài hát
                     topSongList = list;
-
-                    // Kiểm tra context trước khi khởi tạo adapter
                     if (getContext() == null) {
                         Log.e("HomeFragment", "Context is null, cannot create adapter");
                         return;
                     }
 
-                    // Sử dụng requireContext() để đảm bảo context không null
+
                     topSongAdapter = new TopSongAdapter(requireContext(), list);
 
-                    // ✅ Xử lý sự kiện click bài hát - truyền cả position
+
                     topSongAdapter.setOnSongClickListener((baiHat, position) ->
                             openMusicPlayer(baiHat, position)
                     );
@@ -152,12 +146,10 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    // ✅ Thêm parameter position
+
     private void openMusicPlayer(BaiHat baiHat, int position) {
         Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
         intent.putExtra("SONG_OBJECT", baiHat);
-
-        // ✅ Truyền playlist và position
         if (topSongList != null && !topSongList.isEmpty()) {
             intent.putExtra("PLAYLIST", topSongList);
             intent.putExtra("POSITION", position);
@@ -173,10 +165,10 @@ public class HomeFragment extends Fragment {
         }
     }
 
+
     private void openCategoryDetail(TheLoai theLoai) {
         Intent intent = new Intent(getActivity(), CategoryDetailActivity.class);
 
-        // ✅ Truyền object TheLoai
         intent.putExtra("category", theLoai);
 
         startActivity(intent);
