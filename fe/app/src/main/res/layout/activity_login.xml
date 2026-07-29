@@ -1,0 +1,117 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/ic_background_music">
+
+        <!-- Hình tròn ở góc trên phải -->
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_circle_mask"
+            android:clipToOutline="true"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/app_music" />
+
+        <!-- Khung đăng nhập -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="30dp"
+            android:background="@color/white"
+            app:cardCornerRadius="30dp"
+            app:cardElevation="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:gravity="center_horizontal"
+                android:background="#40FFFFFF">
+
+                <!-- Tiêu đề -->
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="36dp"
+                    android:text="Music App"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <!-- Email -->
+                <EditText
+                    android:id="@+id/edtEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="  Nhập Email"
+                    android:paddingLeft="12dp"
+                    android:drawableLeft="@drawable/baseline_person_24"
+                    android:drawablePadding="10dp"
+                    android:background="@drawable/edittext_login_border"
+                    android:textSize="16sp" />
+
+                <!-- Mật khẩu -->
+                <EditText
+                    android:id="@+id/edtPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="20dp"
+                    android:hint="  Nhập mật khẩu"
+                    android:inputType="textPassword"
+                    android:paddingLeft="12dp"
+                    android:drawableLeft="@drawable/outline_beenhere_24"
+                    android:drawablePadding="10dp"
+                    android:background="@drawable/edittext_login_border"
+                    android:textSize="16sp" />
+
+                <!-- Nút đăng nhập -->
+                <Button
+                    android:id="@+id/btnLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:padding="12dp"
+                    android:backgroundTint="#2C2C2C"
+                    android:text="ĐĂNG NHẬP"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:elevation="4dp"
+                    android:strokeColor="@color/black"
+                    android:strokeWidth="2" />
+
+                <!-- Liên kết đăng ký -->
+                <TextView
+                    android:id="@+id/tvRegister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Chưa có tài khoản? Đăng ký ngay"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="italic"
+                    android:cursorVisible="true"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

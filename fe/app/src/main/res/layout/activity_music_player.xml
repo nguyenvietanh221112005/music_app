@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:padding="16dp">
+
+    <!-- Header với nút back và favorite -->
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:id="@+id/imgBack"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_back"
+            android:contentDescription="Back button"
+            android:padding="4dp"
+            app:tint="@android:color/white" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/imgFavorite"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_heart"
+            android:contentDescription="Favorite button"
+            android:padding="4dp" />
+
+    </LinearLayout>
+
+    <!-- Hình ảnh bài hát (quay tròn) -->
+    <FrameLayout
+        android:id="@+id/imageContainer"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/headerLayout"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_shadow">
+
+        <ImageView
+            android:id="@+id/imgSongImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="Song image" />
+
+    </FrameLayout>
+
+    <!-- Thông tin bài hát -->
+    <LinearLayout
+        android:id="@+id/songInfoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/imageContainer"
+        android:layout_marginTop="40dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tvSongName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên bài hát"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tvArtist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ca sĩ"
+            android:textSize="16sp"
+            android:textColor="#CCCCCC"
+            android:layout_marginTop="8dp"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+    </LinearLayout>
+
+    <!-- SeekBar và thời gian -->
+    <LinearLayout
+        android:id="@+id/seekBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/songInfoLayout"
+        android:layout_marginTop="32dp">
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressTint="@android:color/white"
+            android:thumbTint="@android:color/white"
+            android:max="100" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/tvCurrentTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0:00"
+                android:textColor="@android:color/white"
+                android:textSize="12sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvTotalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0:00"
+                android:textColor="@android:color/white"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Controls (Previous, Play/Pause, Next) -->
+    <LinearLayout
+        android:id="@+id/controlsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_below="@id/seekBarLayout"
+        android:layout_marginTop="32dp">
+
+        <ImageView
+            android:id="@+id/imgPrevious"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_previous"
+            android:contentDescription="Previous button"
+            android:padding="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/imgPlayPause"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/ic_play"
+            android:contentDescription="Play/Pause button"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:padding="16dp"
+            android:background="@drawable/circle_button"
+            app:tint="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/imgNext"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_next"
+            android:contentDescription="Next button"
+            android:padding="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@android:color/white" />
+
+    </LinearLayout>
+
+</RelativeLayout>
